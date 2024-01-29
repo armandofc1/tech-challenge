@@ -43,7 +43,7 @@ Miro: [https://miro.com/app/board/uXjVN0RKMb4=/?share_link_id=784435112003](http
 
 ## Entregável 02
 
-Repositório:
+Repositório: [https://github.com/armandofc1/tech-challenge](https://github.com/armandofc1/tech-challenge)
 
 Aplicação backend (monolito) :
 a. Utilizando arquitetura hexagonal
