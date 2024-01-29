@@ -20,7 +20,6 @@ Documentação do sistema (DDD)
 
 **Linguagem Ubíqua:**
 |Termo           |Descrição|
-
 |----------------|-------------------------------|
 |Cliente |pessoa que faz o pedido e que paga por ele.|
 |Produto |item comercializado pela lanchonete, podendo ser classificado pelas categorias.|
@@ -37,10 +36,10 @@ Documentação do sistema (DDD)
 Miro: [https://miro.com/app/board/uXjVN0RKMb4=/?share_link_id=784435112003](https://miro.com/app/board/uXjVN0RKMb4=/?share_link_id=784435112003)
 
 **a. Realização do pedido e pagamento**
-![realizacao-do-pedido-e-pagamento](docs/images/pedidos_pagamentos.png)
+![realizacao-do-pedido-e-pagamento](docs/images/pedidos_pagamentos.PNG)
 
 **b. Preparação e entrega do pedido**
-![preparacao-entrega](docs/images/preparacao_entrega.png)
+![preparacao-entrega](docs/images/preparacao_entrega.PNG)
 
 ## Entregável 02
 
