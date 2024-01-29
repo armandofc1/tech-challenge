@@ -46,23 +46,38 @@ Miro: [https://miro.com/app/board/uXjVN0RKMb4=/?share_link_id=784435112003](http
 Repositório: [https://github.com/armandofc1/tech-challenge](https://github.com/armandofc1/tech-challenge)
 
 Aplicação backend (monolito) :
-a. Utilizando arquitetura hexagonal
-b. APIs
-  I. Cadastro do Cliente
-  II. Identificação do Cliente via CPF
-  III. Criar, editar e remover de produto
-  IV. Buscar produtos por categoria
-  V. Fake checkout, apenas enviar os produtos escolhidos para a fila
-  VI. Listar os pedidos
 
+a. Utilizando arquitetura hexagonal
+
+b. APIs
+```
+I. Cadastro do Cliente
+II. Identificação do Cliente via CPF
+III. Criar, editar e remover de produto
+IV. Buscar produtos por categoria
+V. Fake checkout, apenas enviar os produtos escolhidos para a fila
+VI. Listar os pedidos
+```
 c. Aplicação deverá ser escalável para atender grandes volumes nos horários de pico
+
 d. Banco de dados a sua escolha
-  I. Inicialmente deveremos trabalhar e organizar a fila dos pedidos apenas em banco de dados
+```
+I. Inicialmente deveremos trabalhar e organizar a fila dos pedidos apenas em banco de dados
+```
 
 ## Entregável 03
 
 Aplicação entregue com um Dockerfile.
 
 Para validação da POC, temos a seguinte limitação de infraestrutura:
-  1 instância para banco de dados
-  1 instâncias para executar aplicação
+- 1 instância para banco de dados
+- 1 instâncias para executar aplicação
+
+**Dockerfile**
+```
+FROM xxxx
+VOLUME xxxx
+ADD xxxx
+RUN xxx
+EXPOSE
+```
