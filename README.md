@@ -83,21 +83,59 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["API/API.csproj", "API/"]
-RUN dotnet restore "API/API.csproj"
+COPY ["Interface/Host.csproj", "Interface/"]
+RUN dotnet restore "Interface/Host.csproj"
 COPY . .
-WORKDIR "/src/API"
-RUN dotnet build "API.csproj" -c Release -o /app/build
+WORKDIR "/src/Interface"
+RUN dotnet build "Host.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Host.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "API.dll"]
+ENTRYPOINT ["dotnet", "Host.dll"]
 ```
-**Docker Compose*
+**Docker Compose**
 ```
-FROM
+version: '3.4'
+
+networks:
+  l01:
+    driver: bridge 
+
+services:
+  lanchonete-service:
+    image: ${REGISTRY:-service-one}/customer-service.api:${PLATFORM:-linux}-${TAG:-latest}
+    depends_on:
+      - "tech_challenge_db"
+    container_name: lanchonete-service
+    ports:
+      - "5009:80"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionString=host=tech_challenge_db;port=5432;database=lanchonete;username=postgres;password=postgres;Pooling=true;
+    networks:
+      - l01
+
+  tech_challenge_db:
+    image: postgres:latest
+    container_name: tech_challenge_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=lanchonete
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - customer_data:/var/lib/postgresql/data/ 
+    networks:
+      - l01
+
+volumes:
+  lanchonete_data:
 ```
