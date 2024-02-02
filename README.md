@@ -50,7 +50,7 @@ Aplicação backend (monolito) :
 a. Utilizando arquitetura hexagonal
 
 b. APIs
-```
+
 I. Cadastro do Cliente
 ![cadastro-cliente](docs/images/cadastro_de_cliente.png)
 
@@ -70,7 +70,6 @@ V. Fake checkout, apenas enviar os produtos escolhidos para a fila
 VI. Listar os pedidos
 ![listar-pedidos](docs/images/listar_pedidos.png)
 
-```
 c. Aplicação deverá ser escalável para atender grandes volumes nos horários de pico
 
 d. Banco de dados a sua escolha
@@ -88,67 +87,71 @@ Para validação da POC, temos a seguinte limitação de infraestrutura:
 
 **Dockerfile**
 ```
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8000
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ENV ASPNETCORE_URLS=http://+:8000
+
+USER app
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG configuration=Release
 WORKDIR /src
-COPY ["Interface/Host.csproj", "Interface/"]
-RUN dotnet restore "Interface/Host.csproj"
+COPY ["TechChallenge.csproj", "./"]
+RUN dotnet restore "TechChallenge.csproj"
 COPY . .
-WORKDIR "/src/Interface"
-RUN dotnet build "Host.csproj" -c Release -o /app/build
+WORKDIR "/src/."
+RUN dotnet build "TechChallenge.csproj" -c $configuration -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Host.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG configuration=Release
+RUN dotnet publish "TechChallenge.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Host.dll"]
+ENTRYPOINT ["dotnet", "TechChallenge.dll"]
+
 ```
 **Docker Compose**
 ```
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
 version: '3.4'
 
-networks:
-  l01:
-    driver: bridge 
-
 services:
-  lanchonete-service:
-    image: ${REGISTRY:-service-one}/customer-service.api:${PLATFORM:-linux}-${TAG:-latest}
+  techchallenge:
+    image: techchallenge
     depends_on:
-      - "tech_challenge_db"
+      - "techchallenge_db"
     container_name: lanchonete-service
-    ports:
-      - "5009:80"
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
     environment:
-      - ConnectionString=host=tech_challenge_db;port=5432;database=lanchonete;username=postgres;password=postgres;Pooling=true;
+      - ConnectionString=host=techchallenge_db;port=5432;database=tech_challenge;username=postgres;password=mysecretpassword;Pooling=true;
     networks:
       - l01
 
-  tech_challenge_db:
+  techchallenge_db:
     image: postgres:latest
-    container_name: tech_challenge_db
+    container_name: techchallenge_db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=lanchonete
+      - POSTGRES_PASSWORD=mysecretpassword
     ports:
       - "5432:5432"
     restart: always
     volumes:
-      - customer_data:/var/lib/postgresql/data/ 
+      - postgres_data:/var/lib/postgresql/data/ 
     networks:
       - l01
 
 volumes:
-  lanchonete_data:
+  postgres_data:
+
+networks: 
+  l01:
+    driver: bridge
 ```
