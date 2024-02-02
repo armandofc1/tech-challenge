@@ -42,7 +42,6 @@ var builder = WebApplication.CreateBuilder(args);
                     Url = new Uri("http://opensource.org/licenses/MIT"),
                 }
             });
-        //c.SchemaFilter<EnumSchemaFilter>();
     });
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

@@ -3,31 +3,36 @@
 version: '3.4'
 
 services:
+  techchallenge_db:
+    hostname: techchallenge_db
+    image: postgres:latest
+    container_name: techchallenge_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=tech_challenge
+    ports:
+      - 5432:5432
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - l01
+
   techchallenge:
     image: techchallenge
     depends_on:
-      - "techchallenge_db"
+      - techchallenge_db
     container_name: lanchonete-service
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
       - 8000:8000
-    environment:
-      - ConnectionString=host=techchallenge_db;port=5432;database=tech_challenge;username=postgres;password=mysecretpassword;Pooling=true;
-    networks:
-      - l01
-
-  techchallenge_db:
-    image: postgres:latest
-    container_name: techchallenge_db
-    environment:
-      - POSTGRES_PASSWORD=mysecretpassword
-    ports:
-      - "5432:5432"
     restart: always
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/ 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionString=host=techchallenge_db;port=5432;database=tech_challenge;username=postgres;password=mysecretpassword;Pooling=true;
     networks:
       - l01
 
@@ -36,3 +41,4 @@ volumes:
 
 networks: 
   l01:
+    driver: bridge
