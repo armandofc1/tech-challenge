@@ -4,16 +4,16 @@ using AutoMapper;
 using BCrypt.Net;
 using WebApi.Entities;
 using WebApi.Helpers;
-using WebApi.Models.Cliente;
+using WebApi.Models.Clientes;
 using WebApi.Repositories;
 
 public interface IClienteService
 {
-    Task<IEnumerable<Cliente>> GetAll();
-    Task<Cliente> GetById(int id);
-    Task<Cliente> GetByCPF(string CPF);
-    Task<Cliente> Create(CreateRequest model);
-    Task Update(int id, UpdateRequest model);
+    Task<IEnumerable<Cliente>?> GetAll();
+    Task<Cliente?> GetById(int id);
+    Task<Cliente?> GetByCPF(string CPF);
+    Task<Cliente> Create(ClienteCreateRequest model);
+    Task Update(int id, ClienteUpdateRequest model);
     Task Delete(int id);
 }
 
@@ -30,28 +30,28 @@ public class ClienteService : IClienteService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<Cliente>> GetAll()
+    public async Task<IEnumerable<Cliente>?> GetAll()
         => await _clienteRepository.GetAll();
 
-    public async Task<Cliente> GetById(int id)
+    public async Task<Cliente?> GetById(int id)
     {
         var result = await _clienteRepository.GetById(id);
         if (result == null)
-            throw new KeyNotFoundException("Cliente não encontrado");
+            throw new KeyNotFoundException($"Cliente {id} não encontrado");
 
         return result;
     }
 
-    public async Task<Cliente> GetByCPF(string CPF)
+    public async Task<Cliente?> GetByCPF(string CPF)
     {
         var result = await _clienteRepository.GetByCPF(CPF);
         if (result == null)
-            throw new KeyNotFoundException("Cliente não encontrado");
+            throw new KeyNotFoundException($"Cliente com {CPF} não encontrado");
 
         return result;
     }
 
-    public async Task<Cliente> Create(CreateRequest model)
+    public async Task<Cliente> Create(ClienteCreateRequest model)
     {
         // validate
         if (await _clienteRepository.GetByCPF(model.CPF!) != null)
@@ -67,12 +67,12 @@ public class ClienteService : IClienteService
         return await _clienteRepository.Create(cliente);
     }
 
-    public async Task Update(int id, UpdateRequest model)
+    public async Task Update(int id, ClienteUpdateRequest model)
     {
         var cliente = await _clienteRepository.GetById(id);
 
         if (cliente == null)
-            throw new KeyNotFoundException("Cliente não encontrado");
+            throw new KeyNotFoundException($"Cliente {id} não encontrado");
 
         // validate
         var cpfChanged = !string.IsNullOrEmpty(model.CPF) && cliente.CPF != model.CPF;
@@ -91,5 +91,11 @@ public class ClienteService : IClienteService
     }
 
     public async Task Delete(int id)
-        => await _clienteRepository.Delete(id);
+    {
+        var result = await _clienteRepository.GetById(id);
+        if (result == null)
+            throw new KeyNotFoundException($"Cliente {id} não encontrado");
+
+        await _clienteRepository.Delete(id);
+    }
 }

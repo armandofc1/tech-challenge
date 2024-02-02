@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-namespace WebApi.Models.Cliente;
+namespace WebApi.Models.Clientes;
 
-public class CreateRequest
+public class ClienteCreateRequest
 {
     [Required]
     [MinLength(3)]

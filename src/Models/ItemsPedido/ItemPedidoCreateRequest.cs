@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-namespace WebApi.Models.ItemPedido;
+namespace WebApi.Models.ItemsPedido;
 
-public class UpdateRequest
+public class ItemPedidoCreateRequest
 {
     [Required]
     public int? PedidoId { get; set; }
     
     [Required]
-    public Double? Preco { get; set; }
+    public int? ProdutoId { get; set; }
 
     [Required]
     public int? Quantidade { get; set; }

@@ -9,10 +9,10 @@ using WebApi.Repositories;
 
 public interface IUserService
 {
-    Task<IEnumerable<User>> GetAll();
-    Task<User> GetById(int id);
-    Task Create(CreateRequest model);
-    Task Update(int id, UpdateRequest model);
+    Task<IEnumerable<User>?> GetAll();
+    Task<User?> GetById(int id);
+    Task<User> Create(UserCreateRequest model);
+    Task Update(int id, UserUpdateRequest model);
     Task Delete(int id);
 }
 
@@ -29,22 +29,20 @@ public class UserService : IUserService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<User>> GetAll()
-    {
-        return await _userRepository.GetAll();
-    }
+    public async Task<IEnumerable<User>?> GetAll()
+        => await _userRepository.GetAll();
 
-    public async Task<User> GetById(int id)
+    public async Task<User?> GetById(int id)
     {
         var user = await _userRepository.GetById(id);
 
         if (user == null)
-            throw new KeyNotFoundException("User not found");
+            throw new KeyNotFoundException($"User {id} not found");
 
         return user;
     }
 
-    public async Task Create(CreateRequest model)
+    public async Task<User> Create(UserCreateRequest model)
     {
         // validate
         if (await _userRepository.GetByEmail(model.Email!) != null)
@@ -57,15 +55,15 @@ public class UserService : IUserService
         user.PasswordHash = BCrypt.HashPassword(model.Password);
 
         // save user
-        await _userRepository.Create(user);
+        return await _userRepository.Create(user);
     }
 
-    public async Task Update(int id, UpdateRequest model)
+    public async Task Update(int id, UserUpdateRequest model)
     {
         var user = await _userRepository.GetById(id);
 
         if (user == null)
-            throw new KeyNotFoundException("User not found");
+            throw new KeyNotFoundException($"User {id} not found");
 
         // validate
         var emailChanged = !string.IsNullOrEmpty(model.Email) && user.Email != model.Email;
@@ -85,6 +83,10 @@ public class UserService : IUserService
 
     public async Task Delete(int id)
     {
+        var user = await _userRepository.GetById(id);
+        if (user == null)
+            throw new KeyNotFoundException($"User {id} not found");
+
         await _userRepository.Delete(id);
     }
 }

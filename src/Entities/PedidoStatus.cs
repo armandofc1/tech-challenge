@@ -2,10 +2,9 @@ namespace WebApi.Entities;
 
 public enum PedidoStatus
 {
-    Criado,
-    Pago,
     Recebido,
-    EmpPreparacao,
+    Pago,
+    EmPreparacao,
     Pronto,
     Finalizado
 }

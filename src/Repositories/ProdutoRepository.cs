@@ -6,9 +6,9 @@ using WebApi.Helpers;
 
 public interface IProdutoRepository
 {
-    Task<IEnumerable<Produto>> GetAll();
-    Task<IEnumerable<Produto>> GetAllByCategoria(string categoria);
-    Task<Produto> GetById(int id);
+    Task<IEnumerable<Produto>?> GetAll();
+    Task<IEnumerable<Produto>?> GetAllByCategoria(ProdutoCategoria categoria);
+    Task<Produto?> GetById(int id);
     Task<Produto> Create(Produto produto);
     Task Update(Produto produto);
     Task Delete(int id);
@@ -23,7 +23,7 @@ public class ProdutoRepository : IProdutoRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Produto>> GetAll()
+    public async Task<IEnumerable<Produto>?> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -32,7 +32,7 @@ public class ProdutoRepository : IProdutoRepository
         return await connection.QueryAsync<Produto>(sql);
     }
 
-    public async Task<IEnumerable<Produto>> GetAllByCategoria(string categoria)
+    public async Task<IEnumerable<Produto>?> GetAllByCategoria(ProdutoCategoria categoria)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -42,7 +42,7 @@ public class ProdutoRepository : IProdutoRepository
         return await connection.QueryAsync<Produto>(sql, new { categoria });
     }
 
-    public async Task<Produto> GetById(int id)
+    public async Task<Produto?> GetById(int id)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -60,7 +60,7 @@ public class ProdutoRepository : IProdutoRepository
             VALUES (@Nome, @Descricao, @Categoria, @Preco)
             RETURNING Id;
         """;
-        produto.Id = await connection.ExecuteAsync(sql, produto);
+        produto.Id = await connection.ExecuteScalarAsync<int>(sql, produto);
         return produto;
     }
 

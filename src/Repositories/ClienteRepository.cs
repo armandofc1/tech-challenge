@@ -6,9 +6,9 @@ using WebApi.Helpers;
 
 public interface IClienteRepository
 {
-    Task<IEnumerable<Cliente>> GetAll();
-    Task<Cliente> GetById(int id);
-    Task<Cliente> GetByCPF(string cpf);
+    Task<IEnumerable<Cliente>?> GetAll();
+    Task<Cliente?> GetById(int id);
+    Task<Cliente?> GetByCPF(string? cpf);
     Task<Cliente> Create(Cliente cliente);
     Task Update(Cliente cliente);
     Task Delete(int id);
@@ -23,7 +23,7 @@ public class ClienteRepository : IClienteRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Cliente>> GetAll()
+    public async Task<IEnumerable<Cliente>?> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -32,7 +32,7 @@ public class ClienteRepository : IClienteRepository
         return await connection.QueryAsync<Cliente>(sql);
     }
 
-    public async Task<Cliente> GetById(int id)
+    public async Task<Cliente?> GetById(int id)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -42,14 +42,18 @@ public class ClienteRepository : IClienteRepository
         return await connection.QuerySingleOrDefaultAsync<Cliente>(sql, new { id });
     }
 
-    public async Task<Cliente> GetByCPF(string cpf)
+    public async Task<Cliente?> GetByCPF(string? cpf)
     {
-        using var connection = _context.CreateConnection();
-        var sql = """
-            SELECT * FROM Clientes 
-            WHERE CPF = @cpf
-        """;
-        return await connection.QuerySingleOrDefaultAsync<Cliente>(sql, new { cpf });
+        if(!string.IsNullOrEmpty(cpf))
+        {
+            using var connection = _context.CreateConnection();
+            var sql = """
+                SELECT * FROM Clientes 
+                WHERE CPF = @cpf
+            """;
+            return await connection.QuerySingleOrDefaultAsync<Cliente>(sql, new { cpf });
+        }
+        return null;
     }
 
     public async Task<Cliente> Create(Cliente cliente)
@@ -60,7 +64,7 @@ public class ClienteRepository : IClienteRepository
             VALUES (@Nome, @SobreNome, @CPF, @Email, @Senha)
             RETURNING Id;
         """;
-        cliente.Id = await connection.ExecuteAsync(sql, cliente);
+        cliente.Id = await connection.ExecuteScalarAsync<int>(sql, cliente);
         return cliente;
     }
 

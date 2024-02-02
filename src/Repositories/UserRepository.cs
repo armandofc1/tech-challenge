@@ -6,10 +6,10 @@ using WebApi.Helpers;
 
 public interface IUserRepository
 {
-    Task<IEnumerable<User>> GetAll();
-    Task<User> GetById(int id);
-    Task<User> GetByEmail(string email);
-    Task Create(User user);
+    Task<IEnumerable<User>?> GetAll();
+    Task<User?> GetById(int id);
+    Task<User?> GetByEmail(string email);
+    Task<User> Create(User user);
     Task Update(User user);
     Task Delete(int id);
 }
@@ -23,7 +23,7 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> GetAll()
+    public async Task<IEnumerable<User>?> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -32,7 +32,7 @@ public class UserRepository : IUserRepository
         return await connection.QueryAsync<User>(sql);
     }
 
-    public async Task<User> GetById(int id)
+    public async Task<User?> GetById(int id)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -42,7 +42,7 @@ public class UserRepository : IUserRepository
         return await connection.QuerySingleOrDefaultAsync<User>(sql, new { id });
     }
 
-    public async Task<User> GetByEmail(string email)
+    public async Task<User?> GetByEmail(string email)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -52,14 +52,16 @@ public class UserRepository : IUserRepository
         return await connection.QuerySingleOrDefaultAsync<User>(sql, new { email });
     }
 
-    public async Task Create(User user)
+    public async Task<User> Create(User user)
     {
         using var connection = _context.CreateConnection();
         var sql = """
             INSERT INTO Users (Title, FirstName, LastName, Email, Role, PasswordHash)
             VALUES (@Title, @FirstName, @LastName, @Email, @Role, @PasswordHash)
+            RETURNING Id;
         """;
-        await connection.ExecuteAsync(sql, user);
+        user.Id = await connection.ExecuteScalarAsync<int>(sql, user);
+        return user;
     }
 
     public async Task Update(User user)

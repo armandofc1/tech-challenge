@@ -6,11 +6,13 @@ using WebApi.Helpers;
 
 public interface IItemPedidoRepository
 {
-    Task<IEnumerable<ItemPedido>> GetAll();
-    Task<ItemPedido> GetById(int id);
+    Task<IEnumerable<ItemPedido>?> GetAll();
+    Task<IEnumerable<ItemPedido>?> GetAllByPedidoId(int pedidoId);
+    Task<ItemPedido?> GetById(int id);
     Task<ItemPedido> Create(ItemPedido itemPedido);
     Task Update(ItemPedido itemPedido);
     Task Delete(int id);
+    Task DeleteByPedidoId(int pedidoId);
 }
 
 public class ItemPedidoRepository : IItemPedidoRepository
@@ -22,7 +24,7 @@ public class ItemPedidoRepository : IItemPedidoRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<ItemPedido>> GetAll()
+    public async Task<IEnumerable<ItemPedido>?> GetAll()
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -31,7 +33,17 @@ public class ItemPedidoRepository : IItemPedidoRepository
         return await connection.QueryAsync<ItemPedido>(sql);
     }
 
-    public async Task<ItemPedido> GetById(int id)
+    public async Task<IEnumerable<ItemPedido>?> GetAllByPedidoId(int pedidoId)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+            SELECT * FROM ItensPedidos
+            WHERE PedidoId = @pedidoId
+        """;
+        return await connection.QueryAsync<ItemPedido>(sql, new { pedidoId });
+    }
+
+    public async Task<ItemPedido?> GetById(int id)
     {
         using var connection = _context.CreateConnection();
         var sql = """
@@ -45,12 +57,13 @@ public class ItemPedidoRepository : IItemPedidoRepository
     {
         using var connection = _context.CreateConnection();
         var sql = """
-            INSERT INTO ItensPedidos (PedidoId, Preco, Quantidade)
-            VALUES (@PedidoId, @Status, @Quantidade)
+            INSERT INTO ItensPedidos (PedidoId, ProdutoId, Preco, Quantidade)
+            VALUES (@PedidoId, @ProdutoId, @Preco, @Quantidade)
             RETURNING Id;
         """;
-        itemPedido.Id = await connection.ExecuteAsync(sql, new { 
+        itemPedido.Id = await connection.ExecuteScalarAsync<int>(sql, new { 
             PedidoId = itemPedido.Pedido.Id,
+            ProdutoId = itemPedido.Produto?.Id,
             itemPedido.Preco,
             itemPedido.Quantidade
         });
@@ -62,11 +75,16 @@ public class ItemPedidoRepository : IItemPedidoRepository
         using var connection = _context.CreateConnection();
         var sql = """
             UPDATE ItensPedidos 
-            SET Preco = @Preco,
+            SET ProdutoId = @ProdutoId,
+                Preco = @Preco,
                 Quantidade = @Quantidade
             WHERE Id = @Id
         """;
-        await connection.ExecuteAsync(sql, itemPedido);
+        await connection.ExecuteAsync(sql, new { 
+            ProdutoId = itemPedido.Produto?.Id,
+            itemPedido.Preco,
+            itemPedido.Quantidade
+        });
     }
 
     public async Task Delete(int id)
@@ -77,5 +95,15 @@ public class ItemPedidoRepository : IItemPedidoRepository
             WHERE Id = @id
         """;
         await connection.ExecuteAsync(sql, new { id });
+    }
+
+    public async Task DeleteByPedidoId(int pedidoId)
+    {
+        using var connection = _context.CreateConnection();
+        var sql = """
+            DELETE FROM ItensPedidos 
+            WHERE PedidoId = @pedidoId
+        """;
+        await connection.ExecuteAsync(sql, new { pedidoId });
     }
 }

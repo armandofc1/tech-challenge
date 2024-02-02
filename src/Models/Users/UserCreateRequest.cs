@@ -1,9 +1,8 @@
-namespace WebApi.Models.Users;
-
 using System.ComponentModel.DataAnnotations;
 using WebApi.Entities;
 
-public class CreateRequest
+namespace WebApi.Models.Users;
+public class UserCreateRequest
 {
     [Required]
     public string? Title { get; set; }

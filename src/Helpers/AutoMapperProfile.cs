@@ -2,16 +2,20 @@ namespace WebApi.Helpers;
 
 using AutoMapper;
 using WebApi.Entities;
+using WebApi.Models.Users;
+using WebApi.Models.Clientes;
+using WebApi.Models.Produtos;
+using WebApi.Models.Pedidos;
 
 public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        // CreateRequest -> User
-        CreateMap<WebApi.Models.Users.CreateRequest, User>();
+        // UserCreateRequest -> User
+        CreateMap<UserCreateRequest, User>();
 
-        // UpdateRequest -> User
-        CreateMap<WebApi.Models.Users.UpdateRequest, User>()
+        // UserUpdateRequest -> User
+        CreateMap<UserUpdateRequest, User>()
             .ForAllMembers(x => x.Condition(
                 (src, dest, prop) =>
                 {
@@ -26,11 +30,15 @@ public class AutoMapperProfile : Profile
                 }
             ));
 
-        // CreateRequest -> Produto
-        CreateMap<WebApi.Models.Produto.CreateRequest, Produto>();
+        // UserCreateRequest -> User
+        CreateMap<ClienteCreateRequest, Cliente>();
+        CreateMap<ClienteUpdateRequest, Cliente>();
 
-        // UpdateRequest -> Produto
-        CreateMap<WebApi.Models.Produto.UpdateRequest, Produto>()
+        // ProdutoCreateRequest -> Produto
+        CreateMap<ProdutoCreateRequest, Produto>();
+
+        // ProdutoUpdateRequest -> Produto
+        CreateMap<ProdutoUpdateRequest, Produto>()
             .ForAllMembers(x => x.Condition(
                 (src, dest, prop) =>
                 {
@@ -45,11 +53,13 @@ public class AutoMapperProfile : Profile
                 }
             ));
 
-        // CreateRequest -> Pedido
-        CreateMap<WebApi.Models.Pedido.CreateRequest, Pedido>();
+        // PedidoCreateRequest -> Pedido
+        CreateMap<PedidoCreateRequest, Pedido>()
+        .ForMember(t=>t.Items, opt=>opt.Ignore());
 
-        // UpdateRequest -> Pedido
-        CreateMap<WebApi.Models.Pedido.UpdateRequest, Pedido>()
+        // PedidoUpdateRequest -> Pedido
+        CreateMap<PedidoUpdateRequest, Pedido>()
+            .ForMember(t=>t.Items, opt=>opt.Ignore())
             .ForAllMembers(x => x.Condition(
                 (src, dest, prop) =>
                 {
@@ -60,8 +70,11 @@ public class AutoMapperProfile : Profile
                     // ignore null role
                     if (x.DestinationMember.Name == "Status" && src.Status == null) return false;
 
+                    if (x.DestinationMember.Name == "Items" && src.Items == null) return false;
+
                     return true;
                 }
-            ));
+            )
+            );
     }
 }

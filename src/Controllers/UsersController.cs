@@ -30,23 +30,23 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateRequest model)
+    public async Task<IActionResult> Create([FromBody] UserCreateRequest model)
     {
-        await _userService.Create(model);
-        return Ok(new { message = "User created" });
+        var result = await _userService.Create(model);
+        return Ok(new { result, message = $"User {result.Id} created" });
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateRequest model)
+    public async Task<IActionResult> Update(int id, [FromBody] UserUpdateRequest model)
     {
         await _userService.Update(id, model);
-        return Ok(new { message = "User updated" });
+        return Ok(new { message = $"User {id} updated" });
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _userService.Delete(id);
-        return Ok(new { message = "User deleted" });
+        return Ok(new { message = $"User {id} deleted" });
     }
 }

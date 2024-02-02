@@ -1,29 +1,33 @@
 namespace WebApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using WebApi.Models.Produto;
+using WebApi.Entities;
+using WebApi.Models.Produtos;
 using WebApi.Services;
 
 [ApiController]
 [Route("[controller]")]
-public class ProdutoController : ControllerBase
+public class ProdutosController : ControllerBase
 {
     private IProdutoService _produtoService;
 
-    public ProdutoController(IProdutoService produtoService)
+    public ProdutosController(IProdutoService produtoService)
     {
         _produtoService = produtoService;
     }
-/*
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var result = await _produtoService.GetAll();
-        return Ok(result);
+        if(result?.Count() > 0)
+            return Ok(result);
+
+        return Ok(new { success = true, message = "Nenhum Produto" });
     }
 
     [HttpGet("categoria/{categoria}")]
-    public async Task<IActionResult> GetAllByCategoria(string categoria)
+    public async Task<IActionResult> GetAllByCategoria(ProdutoCategoria categoria)
     {
         var result = await _produtoService.GetAllByCategoria(categoria);
         return Ok(result);
@@ -37,24 +41,23 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateRequest model)
+    public async Task<IActionResult> Create([FromBody] ProdutoCreateRequest model)
     {
-        await _produtoService.Create(model);
-        return Ok(new { message = "Produto criado" });
+        var result = await _produtoService.Create(model);
+        return Ok(new { success = true, result, message = $"Produto {result.Id} criado" });
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UpdateRequest model)
+    public async Task<IActionResult> Update(int id, [FromBody] ProdutoUpdateRequest model)
     {
         await _produtoService.Update(id, model);
-        return Ok(new { message = "Produto alterado" });
+        return Ok(new { success = true, message = $"Produto {id} alterado" });
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         await _produtoService.Delete(id);
-        return Ok(new { message = "Produto deletado" });
+        return Ok(new { success = true, message = $"Produto {id} deletado" });
     }
-    */
 }

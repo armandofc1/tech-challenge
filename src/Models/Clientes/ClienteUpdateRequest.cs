@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-namespace WebApi.Models.Cliente;
+namespace WebApi.Models.Clientes;
 
-public class UpdateRequest
+public class ClienteUpdateRequest
 {
     public string? Nome { get; set; }
     public string? Sobrenome { get; set; }

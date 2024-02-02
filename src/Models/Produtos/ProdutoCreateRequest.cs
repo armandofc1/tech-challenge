@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using WebApi.Entities;
-namespace WebApi.Models.Produto;
+namespace WebApi.Models.Produtos;
 
-public class CreateRequest
+public class ProdutoCreateRequest
 {
     [Required]
     [MinLength(3)]
@@ -13,8 +14,8 @@ public class CreateRequest
     public string? Descricao { get; set; }
 
     [Required]
-    [EnumDataType(typeof(ProdutoCategoria))]
-    public string? Categoria { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ProdutoCategoria? Categoria { get; set; }
 
     [Required]
     public Double? Preco { get; set; }
