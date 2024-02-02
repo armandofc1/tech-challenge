@@ -12,11 +12,13 @@ git clone https://github.com/armandofc1/tech-challenge.git
 cd tech-challenge/src
 docker compose up
 ```
+![terminal](docs/images/terminal.png)
 
 **Browser**
 ```
 http://localhost:8000/swagger
 ```
+![browser](docs/images/browser.png)
 
 # Fase 01
 
