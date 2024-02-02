@@ -52,11 +52,24 @@ a. Utilizando arquitetura hexagonal
 b. APIs
 ```
 I. Cadastro do Cliente
+![cadastro-cliente](docs/images/cadastro_de_cliente.png)
+
 II. Identificação do Cliente via CPF
+![cliente-por-cpf](docs/images/identificacao_por_cpf.png)
+
 III. Criar, editar e remover de produto
+![produtos-crud](docs/images/produtos_crud.png)
+
 IV. Buscar produtos por categoria
+![produtos-categoria](docs/images/produtos-categoria.png)
+
 V. Fake checkout, apenas enviar os produtos escolhidos para a fila
+![checkout](checkout.png)
+![fila](docs/images/fila.PNG)
+
 VI. Listar os pedidos
+![listar-pedidos](docs/images/listar_pedidos.png)
+
 ```
 c. Aplicação deverá ser escalável para atender grandes volumes nos horários de pico
 
