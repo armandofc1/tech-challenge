@@ -4,6 +4,20 @@ Este projeto foi desenvolvido durante o curso de pós-graduação em arquitetura
 
 Membros do grupo 32: Armando Ferreira Costa - RM 352815.
 
+# Executar o projeto localmente
+
+**Terminal:**
+```
+git clone https://github.com/armandofc1/tech-challenge.git
+cd tech-challenge/src
+docker compose up
+```
+
+**Browser**
+```
+http://localhost:8000/swagger
+```
+
 # Fase 01
 
 **O PROBLEMA**
@@ -51,23 +65,23 @@ a. Utilizando arquitetura hexagonal
 
 b. APIs
 
-I. Cadastro do Cliente
+**I. Cadastro do Cliente**
 ![cadastro-cliente](docs/images/cadastro_de_cliente.png)
 
-II. Identificação do Cliente via CPF
+**II. Identificação do Cliente via CPF**
 ![cliente-por-cpf](docs/images/identificacao_por_cpf.png)
 
-III. Criar, editar e remover de produto
+**III. Criar, editar e remover de produto**
 ![produtos-crud](docs/images/produtos_crud.png)
 
-IV. Buscar produtos por categoria
+**IV. Buscar produtos por categoria**
 ![produtos-categoria](docs/images/produtos-categoria.png)
 
-V. Fake checkout, apenas enviar os produtos escolhidos para a fila
+**V. Fake checkout, apenas enviar os produtos escolhidos para a fila**
 ![checkout](checkout.png)
 ![fila](docs/images/fila.PNG)
 
-VI. Listar os pedidos
+**VI. Listar os pedidos**
 ![listar-pedidos](docs/images/listar_pedidos.png)
 
 c. Aplicação deverá ser escalável para atender grandes volumes nos horários de pico
