@@ -7,16 +7,19 @@ Membros do grupo 32: Armando Ferreira Costa - RM 352815.
 # Executar o projeto localmente
 
 **Terminal:**
+PASSO 01
 ```
 git clone https://github.com/armandofc1/tech-challenge.git
 cd tech-challenge/src
 docker compose up
 ```
 ![terminal](docs/images/terminal.png)
+![docker-up](docker_up.png)
 
 **Browser**
+PASSO 02
 ```
-http://localhost:8000/swagger
+http://localhost:4005/swagger
 ```
 ![browser](docs/images/browser.png)
 
@@ -105,9 +108,11 @@ Para validação da POC, temos a seguinte limitação de infraestrutura:
 ```
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8000
+EXPOSE 4005
 
-ENV ASPNETCORE_URLS=http://+:8000
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV ASPNETCORE_URLS=http://+:4005
+ENV ASPNETCORE_HTTP_PORTS=4005
 
 USER app
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -132,35 +137,43 @@ ENTRYPOINT ["dotnet", "TechChallenge.dll"]
 **Docker Compose**
 ```
 # Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
-
 version: '3.4'
 
 services:
-  techchallenge:
-    image: techchallenge
-    depends_on:
-      - "techchallenge_db"
-    container_name: lanchonete-service
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 8000:8000
-    environment:
-      - ConnectionString=host=techchallenge_db;port=5432;database=tech_challenge;username=postgres;password=mysecretpassword;Pooling=true;
-    networks:
-      - l01
-
   techchallenge_db:
     image: postgres:latest
     container_name: techchallenge_db
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=tech_challenge
     ports:
-      - "5432:5432"
+      - 5432:5432
+    expose: 
+      - 5432
     restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data/ 
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - l01
+      
+  lanchoneteapp:
+    image: lanchoneteapp
+    container_name: lanchoneteapp
+    depends_on:
+      - techchallenge_db
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 4005:4005
+    expose: 
+      - 4005
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:4005
+      - ASPNETCORE_HTTP_PORTS=4005
     networks:
       - l01
 
@@ -169,5 +182,5 @@ volumes:
 
 networks: 
   l01:
-    driver: bridge
+  
 ```
