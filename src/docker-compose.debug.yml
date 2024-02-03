@@ -11,8 +11,10 @@ services:
       args:
         - configuration=Debug
     ports:
-      - 8000:8000
+      - 4005:4005
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:4005
+      - ASPNETCORE_HTTP_PORTS=4005
     volumes:
       - ~/.vsdbg:/remote_debugger:rw

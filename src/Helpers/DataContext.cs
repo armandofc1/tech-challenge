@@ -16,7 +16,6 @@ public class DataContext
 
     public IDbConnection CreateConnection()
     {
-        Console.WriteLine($"logando {_dbSettings.Database}");
         var connectionString = $"Host={_dbSettings.Server}; Database={_dbSettings.Database}; Username={_dbSettings.UserId}; Password={_dbSettings.Password};";
         return new NpgsqlConnection(connectionString);
     }

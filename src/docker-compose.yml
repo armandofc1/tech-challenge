@@ -1,10 +1,8 @@
 # Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
-
 version: '3.4'
 
 services:
   techchallenge_db:
-    hostname: techchallenge_db
     image: postgres:latest
     container_name: techchallenge_db
     environment:
@@ -13,26 +11,31 @@ services:
       - POSTGRES_DB=tech_challenge
     ports:
       - 5432:5432
+    expose: 
+      - 5432
     restart: always
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - l01
-
-  techchallenge:
-    image: techchallenge
+      
+  lanchoneteapp:
+    image: lanchoneteapp
+    container_name: lanchoneteapp
     depends_on:
       - techchallenge_db
-    container_name: lanchonete-service
     build:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - 8000:8000
+      - 4005:4005
+    expose: 
+      - 4005
     restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionString=host=techchallenge_db;port=5432;database=tech_challenge;username=postgres;password=mysecretpassword;Pooling=true;
+      - ASPNETCORE_URLS=http://+:4005
+      - ASPNETCORE_HTTP_PORTS=4005
     networks:
       - l01
 
@@ -41,4 +44,3 @@ volumes:
 
 networks: 
   l01:
-    driver: bridge
