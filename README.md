@@ -14,7 +14,7 @@ cd tech-challenge/src
 docker compose up
 ```
 ![terminal](docs/images/terminal.png)
-![docker-up](docker_up.png)
+![docker-up](docs/images/docker_up.png)
 
 **Browser**
 PASSO 02
