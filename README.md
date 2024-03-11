@@ -4,7 +4,7 @@ Este projeto foi desenvolvido durante o curso de pós-graduação em arquitetura
 
 Membros do grupo 32: Armando Ferreira Costa - RM 352815.
 
-# Fase 01
+# Fase 02
 
 **O PROBLEMA**
 
