@@ -13,15 +13,15 @@ git clone https://github.com/armandofc1/tech-challenge.git
 cd tech-challenge/src
 docker compose up
 ```
-![terminal](docs/images/terminal.png)
-![docker-up](docs/images/docker_up.png)
+![terminal](images/terminal.png)
+![docker-up](images/docker_up.png)
 
 **Browser**
 PASSO 02
 ```
 http://localhost:4005/swagger
 ```
-![browser](docs/images/browser.png)
+![browser](images/browser.png)
 
 # Fase 01
 
@@ -55,10 +55,10 @@ Documentação do sistema (DDD)
 Miro: [https://miro.com/app/board/uXjVN0RKMb4=/?share_link_id=784435112003](https://miro.com/app/board/uXjVN0RKMb4=/?share_link_id=784435112003)
 
 **a. Realização do pedido e pagamento**
-![realizacao-do-pedido-e-pagamento](docs/images/pedidos_pagamentos.PNG)
+![realizacao-do-pedido-e-pagamento](images/pedidos_pagamentos.PNG)
 
 **b. Preparação e entrega do pedido**
-![preparacao-entrega](docs/images/preparacao_entrega.PNG)
+![preparacao-entrega](images/preparacao_entrega.PNG)
 
 ## Entregável 02
 
@@ -71,23 +71,23 @@ a. Utilizando arquitetura hexagonal
 b. APIs
 
 **I. Cadastro do Cliente**
-![cadastro-cliente](docs/images/cadastro_de_cliente.png)
+![cadastro-cliente](images/cadastro_de_cliente.png)
 
 **II. Identificação do Cliente via CPF**
-![cliente-por-cpf](docs/images/identificacao_por_cpf.png)
+![cliente-por-cpf](images/identificacao_por_cpf.png)
 
 **III. Criar, editar e remover de produto**
-![produtos-crud](docs/images/produtos_crud.png)
+![produtos-crud](images/produtos_crud.png)
 
 **IV. Buscar produtos por categoria**
-![produtos-categoria](docs/images/produtos-categoria.png)
+![produtos-categoria](images/produtos-categoria.png)
 
 **V. Fake checkout, apenas enviar os produtos escolhidos para a fila**
-![checkout](checkout.png)
-![fila](docs/images/fila.PNG)
+![checkout](images/checkout.png)
+![fila](images/fila.PNG)
 
 **VI. Listar os pedidos**
-![listar-pedidos](docs/images/listar_pedidos.png)
+![listar-pedidos](images/listar_pedidos.png)
 
 c. Aplicação deverá ser escalável para atender grandes volumes nos horários de pico
 
